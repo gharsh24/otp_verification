@@ -2,25 +2,25 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 
-const LoginForm = ({setrecdOTP}) => {
+const Register = () => {
+    const [userName,setUserName]=useState('');
     const [email,setEmail]=useState('');
     const [password,setPassword]=useState('');
-    const [inputOTP,setinputOTP]=useState('');
     const navigate=useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         
         try {
-          const response = await axios.post('http://localhost:3000/login', { email, password });
-          console.log('Response:', response.data);
-          setrecdOTP(response.data.otp);
-
-          navigate('/verify-otp')
+          console.log({userName,email,password});
+          const response = await axios.post('http://localhost:3000/register', { userName,email, password });
+          console.log('Response:', response.data); 
         } catch (error) {
           console.error('Error:', error.response ? error.response.data : error.message);
         }
         finally{
+            navigate('/');
+            setUserName('');
             setEmail('');
             setPassword('');
         }
@@ -29,15 +29,18 @@ const LoginForm = ({setrecdOTP}) => {
 
   return (
     <form onSubmit={handleSubmit}>
+        <label htmlFor="username">Enter your username</label>
+        <input type='text' onChange={(e)=>{setUserName(e.target.value)}} id='username' value={userName}/>
+
         <label htmlFor="email">Enter your email</label>
         <input type='email' onChange={(e)=>{setEmail(e.target.value)}} id='email' value={email}/>
 
         <label htmlFor="password">Enter your password</label>
         <input type='password' id='password' onChange={(e)=>{setPassword(e.target.value)}} value={password} />
 
-        <button>Submit</button>
+        <button>Register</button>
     </form>
   )
 }
 
-export default LoginForm
+export default Register
